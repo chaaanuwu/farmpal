@@ -20,7 +20,8 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.chaaanuwu.farmpal"
+      "package": "com.chaaanuwu.farmpal",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "output": "static",
@@ -31,7 +32,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/farmpal-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",
@@ -39,7 +40,14 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      ["expo-build-properties", {
+        "ios": {
+          "useFrameWorks": "static"
+        }
+      }],
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth"
     ],
     "experiments": {
       "typedRoutes": true,
