@@ -1,7 +1,8 @@
 import useAuth from "@/hooks/useAuth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import firestore from "@react-native-firebase/firestore";
 import { ActivityIndicator, View } from "react-native";
-import AdminNavigator from "./AdminNavigator";
+import AdminNavigator from "./admin/AdminNavigator";
 import AuthNavigator from "./AuthNavigator";
 import FarmerNavigator from "./FarmerNavigator";
 
@@ -9,6 +10,19 @@ export default function RootNavigator() {
   const [role, setRole] = useState<string | null>(null);
 
   const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      const ref = firestore().collection('users').doc(user.uid);
+      ref.get().then(doc => {
+        if (doc.exists()) {
+          // doc exists
+          const data = doc.data();
+          setRole(data?.role ?? null);
+        }
+      });
+    }
+  }, [user]);
 
   if (loading) {
     return (
@@ -27,8 +41,8 @@ export default function RootNavigator() {
   }
 
   if (!user) return <AuthNavigator />;
-  if (role === "farmer") return <FarmerNavigator />;
-  if (role === "admin" || "owner") return <AdminNavigator />;
-
-  return <FarmerNavigator />;
+  if (["farmer"].includes(role ?? "")) return <FarmerNavigator />;
+  if (["admin", "owner"].includes(role ?? "")) return <AdminNavigator />;
+  
+  return null;
 }

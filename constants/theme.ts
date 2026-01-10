@@ -12,6 +12,7 @@ export const Colors = {
     cardBackground: '#FFFFFF',
     greenPrimary: '#22d31cff',
     greenLight: '#A5D6A7',
+    darkGreen: "#15803d",
     yellowAccent: '#FFC107',
     brownAccent: '#8D6E63',
     successGreen: '#66BB6A',
