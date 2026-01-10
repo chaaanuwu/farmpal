@@ -2,10 +2,12 @@ import CustomButton from "@/components/ui/CustomButton";
 import GoogleIcon from "@/components/ui/GoogleIcon";
 import InputContainer from "@/components/ui/InputContainer";
 import { Colors } from "@/constants/theme";
-import { getAuth, signInWithEmailAndPassword } from '@react-native-firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithCredential, signInWithEmailAndPassword } from '@react-native-firebase/auth';
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useRouter } from "expo-router";
 import { SetStateAction, useState } from "react";
 import { Alert, Image, StyleSheet, Text, View } from "react-native";
+import Constants from "expo-constants";
 
 export default function LoginScreen() {
 
@@ -14,6 +16,8 @@ export default function LoginScreen() {
   const [error, setError] = useState('');
 
   const auth = getAuth();
+
+  // const { signInWithGoogle } = useAuth();
 
   const router = useRouter();
 
@@ -25,6 +29,36 @@ export default function LoginScreen() {
       Alert.alert("Sign in error", e.message);
     }
   };
+
+  async function signInWithGoogle() {
+    try {
+      GoogleSignin.configure({
+        offlineAccess: false,
+        webClientId: Constants.expoConfig?.extra?.FIREBASE_WEB_CLIENT_ID,
+        scopes: ['profile', 'email'],
+      });
+      await GoogleSignin.hasPlayServices();
+      const signInResult = await GoogleSignin.signIn();
+      const idToken = signInResult.data?.idToken;
+      const googleCredentials = GoogleAuthProvider.credential(idToken);
+      const userCredentials = await signInWithCredential(auth, googleCredentials);
+      const user = userCredentials.user;
+      console.log("Google Sign-In successful:", user.email);
+    } catch (e: any) {
+      setError(e.message);
+      Alert.alert("Google Sign-In error: ", e.message)
+    }
+  }
+
+  // const signInWithGoogle = async () => {
+  //   try {
+  //     // TODO: Implement Google Sign-In using expo-google-app-auth or react-native-google-signin
+  //     Alert.alert("Google Sign-In", "Google Sign-In implementation required");
+  //   } catch (e: any) {
+  //     setError(e.message);
+  //     Alert.alert("Google Sign-In error", e.message);
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
@@ -41,7 +75,7 @@ export default function LoginScreen() {
 
         {/* Header */}
         <View style={styles.textContainer}>
-          <Text style={styles.title}>Farm Pal</Text>
+          <Text style={styles.title}>FarmPal</Text>
           <Text style={styles.subtitle}>Welcome Back</Text>
         </View>
       </View>
@@ -95,7 +129,7 @@ export default function LoginScreen() {
         <CustomButton
           icon={<GoogleIcon size={24} />}
           title="Login with Google"
-          //   onPress={signInWithGoogle}
+          onPress={() => signInWithGoogle()}
           buttonStyle={styles.googleButton}
           textStyle={styles.googleText}
         // disabled={!request}
