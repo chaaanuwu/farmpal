@@ -7,6 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/theme";
 import CustomButton from "@/components/ui/CustomButton";
 import CustomCard from "@/components/ui/CustomCard";
+import BezierLineChart from "@/components/BezierLineChart";
 
 export default function AdminDashboard() {
   const [name, setName] = useState<string>("");
@@ -75,14 +76,14 @@ export default function AdminDashboard() {
               </View>
               <CustomButton
                 title="Review"
-                onPress={() => { }}
+                // onPress={() => {router.push('/admin/pending-approvals');}}
                 buttonStyle={styles.reviewButton}
               />
             </View>
           </View>
 
           {/* Stats Cards */}
-          <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 8 }}>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 4 }}>
             <CustomCard
               icon="people"
               title="Farmers"
@@ -103,7 +104,7 @@ export default function AdminDashboard() {
             />
           </View>
 
-
+          {/* <BezierLineChart /> */}
         </View>
       </ScrollView>
     </SafeAreaView>
